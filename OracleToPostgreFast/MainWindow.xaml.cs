@@ -1080,7 +1080,7 @@ namespace WpfApp2
 
         /// <summary>
         /// 功能性符号和空格
-        /// </summary>
+        /// </summary> 有些可能需要移动到保留字里面
         static string notWord = " !&,)(%*\r\n.=<>+-//:<@[]^|";
 
         ///单词缓存
@@ -1094,11 +1094,11 @@ namespace WpfApp2
                      
             };
         private void Button_Click(object sender, RoutedEventArgs e)
-        {
+        {   //单词缓存
             tmpWord = "";
-            //输入缓存
+            //输入缓存 加个空格便于结尾处理
             string sqlText = text.Text+" ";
-            ///结果缓存
+            ///结果缓存 
             string result = "";
           
             foreach (char ch in sqlText)
