@@ -1191,7 +1191,21 @@ namespace WpfApp2
 
         private void Button_Click_Test(object sender, RoutedEventArgs e)
         {
-            Exchange(true);
+
+            string tmp = re.Text;
+            if (!string.IsNullOrEmpty(a1.Text)) {
+                tmp = tmp.Replace((a1.Text), a2.Text);
+            }
+            if (!string.IsNullOrEmpty(b1.Text))
+            {
+                tmp = tmp.Replace((b1.Text), b2.Text);
+            }
+            if (!string.IsNullOrEmpty(c1.Text))
+            {
+                tmp = tmp.Replace((c1.Text), c2.Text);
+            }
+            re_Copy1.Text = tmp;
+            //  Exchange(true);
         }
 
         private void Button_Click_join(object sender, RoutedEventArgs e)

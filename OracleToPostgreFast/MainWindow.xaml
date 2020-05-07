@@ -16,12 +16,12 @@
 
         <TextBox x:Name="re_Copy" TextWrapping="Wrap"  AcceptsReturn="True"
             VerticalScrollBarVisibility="Visible" HorizontalAlignment="Left" Height="137" Margin="298,433,0,0"  Text="" VerticalAlignment="Top" Width="429"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="27,420,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="152,420,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="27,448,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="152,448,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="27,476,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="152,476,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="a1" HorizontalAlignment="Left" Height="23" Margin="27,420,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox  Name="a2" HorizontalAlignment="Left" Height="23" Margin="152,420,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox  Name="b1" HorizontalAlignment="Left" Height="23" Margin="27,448,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox   Name="b2" HorizontalAlignment="Left" Height="23" Margin="152,448,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox  Name="c1" HorizontalAlignment="Left" Height="23" Margin="27,476,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="c2"  HorizontalAlignment="Left" Height="23" Margin="152,476,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="re_Copy1" TextWrapping="Wrap"  AcceptsReturn="True"
             VerticalScrollBarVisibility="Visible" HorizontalAlignment="Left" Height="137" Margin="298,433,0,0"  Text="" VerticalAlignment="Top" Width="429"/>
         <TextBox  Name="tbJoinO" TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Left" Margin="858,44,0,0" VerticalAlignment="Top" Height="139" Width="306"/>
