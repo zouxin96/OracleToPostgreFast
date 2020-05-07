@@ -1196,7 +1196,7 @@ namespace WpfApp2
 
         private void Button_Click_join(object sender, RoutedEventArgs e)
         {
-            try
+            try { 
             //单词缓存清空
             tmpWord = "";
             //输入缓存 加个空格便于结尾处理
