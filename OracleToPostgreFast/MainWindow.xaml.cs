@@ -1208,15 +1208,15 @@ namespace WpfApp2
             string caps = "".PadLeft(SelectLines[SelectLines.Length-1].Length);
             string[] sqlTextSplitBYWHERE = sqlTextSplitBYFROM[1].Split(new [] { "WHERE" }, StringSplitOptions.RemoveEmptyEntries);
             string strWhere = sqlTextSplitBYWHERE[1];
-            string strFROM = sqlTextSplitBYWHERE[0].Replace(",", "\r\n");
+            string strFROM = sqlTextSplitBYWHERE[0];
             ///where部分 去掉换行后按and分割
             string[] strWhereLines = strWhere.Split(new[] { "AND" }, StringSplitOptions.RemoveEmptyEntries );
-            string[] strFROMLines = strFROM.Split(new []{ "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] strFROMLines = strFROM.Split(new []{ "," }, StringSplitOptions.RemoveEmptyEntries);
             Dictionary<string, string> TableAsNameAndOriginalName = new Dictionary<string, string>();
             List<string> joinTableAsNames = new List<string>();
             foreach (string strFROMLineItem in strFROMLines)
             {
-                string[] SplitFROMLineItem = strFROMLineItem.Split(' ');
+                string[] SplitFROMLineItem = strFROMLineItem.Replace("\r\n","").Split(' ');
                 string OriginalName = "";
                 string AsName = "";
                 foreach (string str in SplitFROMLineItem) {
@@ -1341,16 +1341,15 @@ namespace WpfApp2
 
             if (joinStrAndOns.Keys.Count > 0)
             {
-              
                 foreach (string joinStrHalf in joinStrAndOns.Keys)
                 {
-                    result += (caps + joinStrHalf+" ON ");
+                    result += ("\r\n"+caps + joinStrHalf+" ON ");
                   
                         foreach (string OneOnStr in joinStrAndOns[joinStrHalf])
                         {
-                            result += OneOnStr + " AND";
+                            result += OneOnStr + " AND\r\n";
                         }
-                    result = result.Substring(0, result.Length - 4);
+                    result = result.Substring(0, result.Length - 6);
                    
                 }
             }
