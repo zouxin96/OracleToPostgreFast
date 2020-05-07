@@ -29,8 +29,8 @@ namespace WpfApp2
         /// <summary>
         /// 保留字
         /// </summary>
-       static List<string> baoliuzi = new List<string>() {
-
+        static List<string> baoliuzi = new List<string>() {
+            "to_date","TO_DATE",
            "A",
                 "<<",
                 "like",
@@ -1080,8 +1080,8 @@ namespace WpfApp2
 
         /// <summary>
         /// 功能性符号和空格
-        /// </summary> 有些可能需要移动到保留字里面
-        static string notWord = " !&,)(%*\r\n.=<>+-//:<@[]^|";
+        /// </summary> 有些可能需要移动到保留字里面 与保留字的区别是他具有单词分割效力
+        static string notWord = " !&,)(%*\r\n.=<>+-//:<[]^|";
 
         ///单词缓存
         string tmpWord = "";
@@ -1091,15 +1091,21 @@ namespace WpfApp2
         Dictionary<string, string> speWord = new Dictionary<string, string>()
             {
                 { "ROWNUM" ,"ROW_NUMBER() OVER ()"},{"NVL","COALESCE"}
-                     
+
             };
         private void Button_Click(object sender, RoutedEventArgs e)
-        {   //单词缓存
+        {
+            Exchange();
+        }
+
+
+        private void  Exchange(bool isTest=false){
+            //单词缓存清空
             tmpWord = "";
             //输入缓存 加个空格便于结尾处理
-            string sqlText = text.Text+" ";
-            ///结果缓存 
-            string result = "";
+            string sqlText = text.Text + " ";
+        ///结果缓存 
+        string result = "";
           
             foreach (char ch in sqlText)
             {
@@ -1109,8 +1115,8 @@ namespace WpfApp2
                     if (chNotW==ch) {
                         isW = false;
                         break;
-                    } 
-                }
+                    }
+}
                 if (isW)
                 {
                     tmpWord += ch;
@@ -1132,10 +1138,11 @@ namespace WpfApp2
                                 tmpWord = speWord[speWordOrn];
                             }
                         }
-                        //数字判断
+                        //数字判断 自动引号 ''
                         double a = 0.0;
                         if (double.TryParse(tmpWord, out a)) {
                             isBaoliuzi = true;
+                            tmpWord = "'" + tmpWord + "'";
                         }
                         
 
@@ -1145,10 +1152,20 @@ namespace WpfApp2
                             isBaoliuzi = true;
                         }
 
-                        //自带带引号处理
-                        if ((tmpWord[0]=='\"'&& tmpWord[tmpWord.Length - 1] == '\"') ||( tmpWord[0] == '\''&& tmpWord[tmpWord.Length-1] == '\''))
+                        //自带引号单词处理
+                        if ((tmpWord[0]=='\"'&& tmpWord[tmpWord.Length - 1] == '\"') ||(tmpWord[0] == '\''&& tmpWord[tmpWord.Length - 1] == '\''))
                         {
                             isBaoliuzi = true;
+                        }
+
+                       
+                        //@@处理
+                        if (tmpWord.Length>=2&& tmpWord.StartsWith("@@"))
+                        {
+                            isBaoliuzi = true;
+                            if (isTest) {
+                                tmpWord = @"'testWord'";
+                            }
                         }
 
 
@@ -1166,11 +1183,188 @@ namespace WpfApp2
                     else {
                         result += ch;
                     }
-
                 }
-
             }
             re.Text = result;
+
+}
+
+        private void Button_Click_Test(object sender, RoutedEventArgs e)
+        {
+            Exchange(true);
+        }
+
+        private void Button_Click_join(object sender, RoutedEventArgs e)
+        {
+            //单词缓存清空
+            tmpWord = "";
+            //输入缓存 加个空格便于结尾处理
+            string sqlText = tbJoinO.Text + " ";//替换掉，
+            string result = "";
+           
+            string[] sqlTextSplitBYFROM= sqlText.Split(new [] { "FROM" }, StringSplitOptions.RemoveEmptyEntries);
+            string select = sqlTextSplitBYFROM[0];
+            string[] SelectLines = sqlTextSplitBYFROM[0].Split('\n');
+            string caps = "".PadLeft(SelectLines[SelectLines.Length-1].Length);
+            string[] sqlTextSplitBYWHERE = sqlTextSplitBYFROM[1].Split(new [] { "WHERE" }, StringSplitOptions.RemoveEmptyEntries);
+            string strWhere = sqlTextSplitBYWHERE[1];
+            string strFROM = sqlTextSplitBYWHERE[0].Replace(",", "\r\n");
+            ///where部分 去掉换行后按and分割
+            string[] strWhereLines = strWhere.Split(new[] { "AND" }, StringSplitOptions.RemoveEmptyEntries );
+            string[] strFROMLines = strFROM.Split(new []{ "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            Dictionary<string, string> TableAsNameAndOriginalName = new Dictionary<string, string>();
+            List<string> joinTableAsNames = new List<string>();
+            foreach (string strFROMLineItem in strFROMLines)
+            {
+                string[] SplitFROMLineItem = strFROMLineItem.Split(' ');
+                string OriginalName = "";
+                string AsName = "";
+                foreach (string str in SplitFROMLineItem) {
+                    if (!string.IsNullOrEmpty(str)) {
+                        if (OriginalName == "") {
+                            OriginalName = str;
+                        }
+                        AsName = str;
+                    }
+                }
+                if (string.IsNullOrEmpty(AsName) || string.IsNullOrWhiteSpace(AsName))
+                {
+
+                }
+                else {
+                    TableAsNameAndOriginalName.Add(AsName, OriginalName);
+                }
+            }
+            bool childConditionFlag = false;
+            int JoinType = 0;//0不链接1内2左3右
+            Dictionary<string,List<string>> joinStrAndOns= new Dictionary<string, List<string>>();
+            List<string> whereStrings = new List<string>();
+            foreach (string strWhereLineItem in strWhereLines)
+            {
+                 JoinType = 0;
+                string joinTabelAsName = "";
+                //按等号切割  不含=号的且不全是空格的直接丢到where部分  
+                bool isJoinOn = false;
+                //一个and条件有多行 视为复杂情况暂不处理
+                if (strWhereLineItem.Trim().Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Length > 1)
+                {
+
+                }
+                else if (strWhereLineItem.Contains("="))
+                {
+
+                    string[] SplitWhereLineItemWord = strWhereLineItem.Split('=');
+
+                    if (SplitWhereLineItemWord[0].Contains("(+)"))
+                    {
+                        joinTabelAsName = SplitWhereLineItemWord[0].Split('.')[0].Trim();
+                        joinTableAsNames.Add(joinTabelAsName);
+                        isJoinOn = true;
+                        JoinType = 3;
+                    }
+                    else if (SplitWhereLineItemWord[1].Contains("(+)"))
+                    {
+                        joinTabelAsName = SplitWhereLineItemWord[1].Split('.')[0].Trim();
+                        joinTableAsNames.Add(joinTabelAsName);
+                        isJoinOn = true;
+                        JoinType = 2;
+                    }
+                    else if(SplitWhereLineItemWord[0].Contains("\".\"")&& SplitWhereLineItemWord[1].Contains("\".\""))
+                    {
+                        isJoinOn = true;
+                        string tLeft = SplitWhereLineItemWord[0].Trim().Split('.')[0].Trim();
+                        string tRight = SplitWhereLineItemWord[1].Trim().Split('.')[0].Trim();
+                        JoinType = 1;
+                        foreach (string TableAsName in TableAsNameAndOriginalName.Keys)
+                        {
+                           
+                            if (TableAsName== tLeft)
+                            {
+                                joinTabelAsName = tRight;
+                                joinTableAsNames.Add(joinTabelAsName);
+                                break;
+                            };
+                            if (TableAsName == tRight)
+                            {
+                                joinTabelAsName = tLeft;
+                                joinTableAsNames.Add(joinTabelAsName);
+                                break;
+                            };
+                        }
+                    }
+                }
+                else {
+
+                }
+                if (isJoinOn)
+                {
+                    string joinStrHalf = "";
+                    if (JoinType == 2)
+                    {
+                        joinStrHalf = "LEFT JOIN ";
+
+                    }
+                    else if (JoinType == 3)
+                    {
+                        joinStrHalf = "RIGHT JOIN ";
+
+                    }
+                    else if(JoinType == 1){
+                        joinStrHalf = "INNER JOIN ";
+                    }
+                    joinStrHalf = joinStrHalf + TableAsNameAndOriginalName[joinTabelAsName] + " AS " + joinTabelAsName;
+                    if (joinStrAndOns.ContainsKey(joinStrHalf))
+                    {
+                        joinStrAndOns[joinStrHalf].Add(strWhereLineItem.Replace("(+)", ""));
+                    }
+                    else {
+                        joinStrAndOns.Add(joinStrHalf, new List<string> { strWhereLineItem.Replace("(+)", "") });
+                    }
+                }
+                else
+                {
+                    whereStrings.Add(strWhereLineItem);
+                }
+            }
+            result = select;
+            result += ("From\n\r");
+            foreach (string asName in TableAsNameAndOriginalName.Keys) {
+                if (joinTableAsNames.Contains(asName)) {
+
+                }
+                else {
+                    result += caps+"  "+TableAsNameAndOriginalName[asName] + " AS " + asName+",\r\n";
+                }
+               
+            }
+            result = result.Substring(0, result.Length - 3);
+
+            if (joinStrAndOns.Keys.Count > 0)
+            {
+              
+                foreach (string joinStrHalf in joinStrAndOns.Keys)
+                {
+                    result += (caps + joinStrHalf+" ON ");
+                  
+                        foreach (string OneOnStr in joinStrAndOns[joinStrHalf])
+                        {
+                            result += OneOnStr + " AND";
+                        }
+                    result = result.Substring(0, result.Length - 4);
+                   
+                }
+            }
+
+           
+            if (whereStrings.Count > 0) {
+                result += (caps + "WHERE\n\r");
+                foreach (string str in whereStrings)
+                {
+                    result += str + " AND";
+                }
+                result = result.Substring(0, result.Length - 4);
+            }
+            tbJoinR.Text = result;
         }
     }
 }

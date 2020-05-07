@@ -5,13 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="800" Width="1200">
+    <Grid Margin="0,0,-555,0">
         <TextBox TextWrapping="Wrap"  AcceptsReturn="True"
   VerticalScrollBarVisibility="Visible" Name="text" HorizontalAlignment="Left" Height="173" Margin="27,10,0,0"  Text="" VerticalAlignment="Top" Width="741"/>
-        <Button Click="Button_Click"  Content="转换" HorizontalAlignment="Left" Margin="342,375,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.5,0.492"/>
+        <Button Click="Button_Click"  Content="转换" HorizontalAlignment="Left" Margin="94,273,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.5,0.492"/>
         <TextBox Name="re" TextWrapping="Wrap"  AcceptsReturn="True"
-            VerticalScrollBarVisibility="Visible" HorizontalAlignment="Left" Height="173" Margin="27,188,0,0"  Text="" VerticalAlignment="Top" Width="741"/>
+            VerticalScrollBarVisibility="Visible" HorizontalAlignment="Left" Height="137" Margin="246,212,0,0"  Text="" VerticalAlignment="Top" Width="522"/>
+        <Button Click="Button_Click_Test"  Content="@@等 替换用" HorizontalAlignment="Left" Margin="76,518,0,0" VerticalAlignment="Top" Width="131" RenderTransformOrigin="0.5,0.492" Height="37"/>
+
+        <TextBox x:Name="re_Copy" TextWrapping="Wrap"  AcceptsReturn="True"
+            VerticalScrollBarVisibility="Visible" HorizontalAlignment="Left" Height="137" Margin="298,433,0,0"  Text="" VerticalAlignment="Top" Width="429"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="27,420,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="152,420,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="27,448,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="152,448,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="27,476,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="152,476,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="re_Copy1" TextWrapping="Wrap"  AcceptsReturn="True"
+            VerticalScrollBarVisibility="Visible" HorizontalAlignment="Left" Height="137" Margin="298,433,0,0"  Text="" VerticalAlignment="Top" Width="429"/>
+        <TextBox  Name="tbJoinO" TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Left" Margin="858,44,0,0" VerticalAlignment="Top" Height="139" Width="306"/>
+        <TextBox Name="tbJoinR" TextWrapping="Wrap" AcceptsReturn="True" Text="（暂时只能单独处理from+where部分 右连接可能不好使 暂时不支持左右join混合 ）" HorizontalAlignment="Left" Margin="858,260,0,0" VerticalAlignment="Top" Height="139" Width="306"/>
+
+        <Button Click="Button_Click_join"  Content="(+)处理" HorizontalAlignment="Left" Margin="971,212,0,0" VerticalAlignment="Top" Width="77" RenderTransformOrigin="0.5,0.492" Height="33"/>
+
 
     </Grid>
 </Window>
