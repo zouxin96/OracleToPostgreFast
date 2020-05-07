@@ -25,7 +25,7 @@
         <TextBox x:Name="re_Copy1" TextWrapping="Wrap"  AcceptsReturn="True"
             VerticalScrollBarVisibility="Visible" HorizontalAlignment="Left" Height="137" Margin="298,433,0,0"  Text="" VerticalAlignment="Top" Width="429"/>
         <TextBox  Name="tbJoinO" TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Left" Margin="858,44,0,0" VerticalAlignment="Top" Height="139" Width="306"/>
-        <TextBox Name="tbJoinR" TextWrapping="Wrap" AcceptsReturn="True" Text="（暂时只能单独处理from+where部分 右连接可能不好使 暂时不支持左右join混合 ）" HorizontalAlignment="Left" Margin="858,260,0,0" VerticalAlignment="Top" Height="139" Width="306"/>
+        <TextBox Name="tbJoinR" TextWrapping="Wrap" AcceptsReturn="True" Text="（暂时只能单独处理select+from+where部分  where嵌套里不能有and嵌套and  ）" HorizontalAlignment="Left" Margin="858,260,0,0" VerticalAlignment="Top" Height="139" Width="306"/>
 
         <Button Click="Button_Click_join"  Content="(+)处理" HorizontalAlignment="Left" Margin="971,212,0,0" VerticalAlignment="Top" Width="77" RenderTransformOrigin="0.5,0.492" Height="33"/>
 
