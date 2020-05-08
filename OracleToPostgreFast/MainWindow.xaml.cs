@@ -1413,7 +1413,7 @@ namespace OracleToPostgreFast
 
             if (whereStrings.Count > 0)
             {
-                result += (caps + "WHERE\n\r");
+                result += (caps + "WHERE\n\r");  
                 foreach (string str in whereStrings)
                 {
                     result += str + " AND";

@@ -29,7 +29,7 @@
 
         <Button Click="Button_Click_join"  Content="(+)处理" HorizontalAlignment="Left" Margin="971,212,0,0" VerticalAlignment="Top" Width="77" RenderTransformOrigin="0.5,0.492" Height="33"/>
         <TextBox  x:Name="tbJoinO_CopyChange" TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Left" Margin="858,433,0,0" VerticalAlignment="Top" Height="139" Width="108"/>
-        <TextBox  x:Name="tbJoinO_Copycheange" Text="复杂内容替换再替换回来" TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Left" Margin="1038,433,0,0" VerticalAlignment="Top" Height="139" Width="126"/>
+        <TextBox  x:Name="tbJoinO_Copycheange" Text="复杂子表填在左边替换掉 再替换回来 " TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Left" Margin="1038,433,0,0" VerticalAlignment="Top" Height="139" Width="126"/>
         <CheckBox IsChecked="True" Name="cbAsStart" Content="从第一个as保留字开始处理" HorizontalAlignment="Left" Margin="43,212,0,0" VerticalAlignment="Top"/>
 
 
