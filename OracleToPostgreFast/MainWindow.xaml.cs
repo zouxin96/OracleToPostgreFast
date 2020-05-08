@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfApp2
+namespace OracleToPostgreFast
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
@@ -1106,7 +1106,8 @@ namespace WpfApp2
             string sqlText = text.Text + " ";
         ///结果缓存 
         string result = "";
-          
+            bool startFromAS = cbAsStart.IsChecked==true;
+            bool AlreadyFindAS=false;
             foreach (char ch in sqlText)
             {
                 bool isW = true; ;
@@ -1123,55 +1124,74 @@ namespace WpfApp2
 
                 }
                 else {
+                    if (tmpWord == "AS") {
+                        AlreadyFindAS = true;
+                    }
                     if (tmpWord != "")
                     {
                         bool isBaoliuzi = false;
-                        foreach (string baoliuziItem in baoliuzi) {
-                            if (baoliuziItem==tmpWord) {
-                                isBaoliuzi = true;
+                        //如果startFromAS并且没找到as 一律跳过
+                        if (AlreadyFindAS||startFromAS==false) {
+                          
+                            foreach (string baoliuziItem in baoliuzi) {
+                                if (baoliuziItem == tmpWord) {
+                                    isBaoliuzi = true;
+                                }
                             }
-                        }
-                        foreach (string speWordOrn in speWord.Keys ) {
-                            if (tmpWord == speWordOrn)
+                            foreach (string speWordOrn in speWord.Keys) {
+                                if (tmpWord == speWordOrn)
+                                {
+                                    isBaoliuzi = true;
+                                    tmpWord = speWord[speWordOrn];
+                                }
+                            }
+                            //数字判断 自动引号 ''
+                            double a = 0.0;
+                            if (double.TryParse(tmpWord, out a)) {
+                                isBaoliuzi = true;
+                                tmpWord = "'" + tmpWord + "'";
+                            }
+
+
+                            //t单字处理 其实无所谓
+                            if (tmpWord == "T")
                             {
                                 isBaoliuzi = true;
-                                tmpWord = speWord[speWordOrn];
+                            }
+
+                            //自带引号单词处理
+                            if ((tmpWord[0] == '\"' && tmpWord[tmpWord.Length - 1] == '\"') || (tmpWord[0] == '\'' && tmpWord[tmpWord.Length - 1] == '\''))
+                            {
+                                isBaoliuzi = true;
+                            }
+
+
+                            //@@处理
+                            if (tmpWord.Length >= 2 && tmpWord.StartsWith("@@"))
+                            {
+                                isBaoliuzi = true;
+                                if (isTest) {
+                                    tmpWord = @"'testWord'";
+                                }
                             }
                         }
-                        //数字判断 自动引号 ''
-                        double a = 0.0;
-                        if (double.TryParse(tmpWord, out a)) {
-                            isBaoliuzi = true;
-                            tmpWord = "'" + tmpWord + "'";
-                        }
-                        
-
-                        //t单字处理 其实无所谓
-                        if (tmpWord == "T")
-                        {
+                        else {
                             isBaoliuzi = true;
                         }
-
-                        //自带引号单词处理
-                        if ((tmpWord[0]=='\"'&& tmpWord[tmpWord.Length - 1] == '\"') ||(tmpWord[0] == '\''&& tmpWord[tmpWord.Length - 1] == '\''))
-                        {
-                            isBaoliuzi = true;
-                        }
-
-                       
-                        //@@处理
-                        if (tmpWord.Length>=2&& tmpWord.StartsWith("@@"))
-                        {
-                            isBaoliuzi = true;
-                            if (isTest) {
-                                tmpWord = @"'testWord'";
-                            }
-                        }
-
 
                         if (!isBaoliuzi) {
+                            //临时解决注释问题 比较愚蠢但是好写。。。
+                            ///判断result去空格结尾是否是--/ 如果注释是断开的就很尴尬 
+                            /////或许可以加个标志出现这种情况后直到找到下一个/n或者/r都不加引号
+                            if (result.Trim().EndsWith("--/"))
+                            {
+                                result += tmpWord ;
+                            }
+                            else {
+                                result += ("\"" + tmpWord + "\"");
+                            }
 
-                            result += ("\"" + tmpWord + "\"");
+                            
                         }
                         else {
                             result += tmpWord;
@@ -1210,22 +1230,31 @@ namespace WpfApp2
 
         private void Button_Click_join(object sender, RoutedEventArgs e)
         {
-            try { 
+            //try {
+
+                string changeTmp = "(复杂文本临时替换)";
             //单词缓存清空
             tmpWord = "";
             //输入缓存 加个空格便于结尾处理
+
+            //不对 这样无法处理嵌套 暂时替换嵌套处理
             string sqlText = tbJoinO.Text + " ";//替换掉，
+            if (tbJoinO_CopyChange.Text.Length > 0)
+            {
+                sqlText = sqlText.Replace(tbJoinO_CopyChange.Text, changeTmp);
+            }
             string result = "";
 
-            string[] sqlTextSplitBYFROM = sqlText.Split(new[] { "FROM" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] sqlTextSplitBYFROM = sqlText.SplitByFirst("FROM" );
             string select = sqlTextSplitBYFROM[0];
             string[] SelectLines = sqlTextSplitBYFROM[0].Split('\n');
             string caps = "".PadLeft(SelectLines[SelectLines.Length - 1].Length);
-            string[] sqlTextSplitBYWHERE = sqlTextSplitBYFROM[1].Split(new[] { "WHERE" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] sqlTextSplitBYWHERE = sqlTextSplitBYFROM[1].SplitByFirst("WHERE");
             string strWhere = sqlTextSplitBYWHERE[1];
             string strFROM = sqlTextSplitBYWHERE[0];
             ///where部分 去掉换行后按and分割
             string[] strWhereLines = strWhere.Split(new[] { "AND" }, StringSplitOptions.RemoveEmptyEntries);
+                //，分割from 
             string[] strFROMLines = strFROM.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             Dictionary<string, string> TableAsNameAndOriginalName = new Dictionary<string, string>();
             List<string> joinTableAsNames = new List<string>();
@@ -1238,13 +1267,15 @@ namespace WpfApp2
                 {
                     if (!string.IsNullOrEmpty(str))
                     {
-                        if (OriginalName == "")
-                        {
-                            OriginalName = str;
-                        }
-                        AsName = str;
+                       // if (OriginalName == "")
+                       // {
+                       //     OriginalName = str;
+                       // }
+                        AsName = str.Trim();
                     }
                 }
+                    OriginalName = strFROMLineItem.Trim().Substring(0, strFROMLineItem.Trim().Length - AsName.Length).Trim();
+
                 if (string.IsNullOrEmpty(AsName) || string.IsNullOrWhiteSpace(AsName))
                 {
 
@@ -1349,7 +1380,7 @@ namespace WpfApp2
                 }
             }
             result = select;
-            result += ("From\n\r");
+            result += ("FROM\n\r");
             foreach (string asName in TableAsNameAndOriginalName.Keys)
             {
                 if (joinTableAsNames.Contains(asName))
@@ -1372,7 +1403,7 @@ namespace WpfApp2
 
                     foreach (string OneOnStr in joinStrAndOns[joinStrHalf])
                     {
-                        result += OneOnStr + " AND\r\n";
+                        result += OneOnStr.Replace("\r\n","") + " AND\r\n";
                     }
                     result = result.Substring(0, result.Length - 6);
 
@@ -1389,11 +1420,14 @@ namespace WpfApp2
                 }
                 result = result.Substring(0, result.Length - 4);
             }
-            tbJoinR.Text = result;
-            }
-            catch {
-                MessageBox.Show("异常" +",可能是格式问题");
-            }
+            tbJoinR.Text = result.Replace(changeTmp, tbJoinO_CopyChange.Text);
+           // }
+           // catch (Exception ex){
+           //     MessageBox.Show("异常" +",可能是格式问题");
+           // }
         }
+
+
+
     }
 }

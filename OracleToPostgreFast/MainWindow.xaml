@@ -1,9 +1,9 @@
-﻿<Window x:Class="WpfApp2.MainWindow"
+﻿<Window x:Class="OracleToPostgreFast.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApp2"
+        xmlns:local="clr-namespace:OracleToPostgreFast"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1200">
     <Grid Margin="0,0,-555,0">
@@ -28,6 +28,9 @@
         <TextBox Name="tbJoinR" TextWrapping="Wrap" AcceptsReturn="True" Text="（暂时只能单独处理select+from+where部分  where嵌套里不能有and嵌套and  ）" HorizontalAlignment="Left" Margin="858,260,0,0" VerticalAlignment="Top" Height="139" Width="306"/>
 
         <Button Click="Button_Click_join"  Content="(+)处理" HorizontalAlignment="Left" Margin="971,212,0,0" VerticalAlignment="Top" Width="77" RenderTransformOrigin="0.5,0.492" Height="33"/>
+        <TextBox  x:Name="tbJoinO_CopyChange" TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Left" Margin="858,433,0,0" VerticalAlignment="Top" Height="139" Width="108"/>
+        <TextBox  x:Name="tbJoinO_Copycheange" Text="复杂内容替换再替换回来" TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Left" Margin="1038,433,0,0" VerticalAlignment="Top" Height="139" Width="126"/>
+        <CheckBox IsChecked="True" Name="cbAsStart" Content="从第一个as保留字开始处理" HorizontalAlignment="Left" Margin="43,212,0,0" VerticalAlignment="Top"/>
 
 
     </Grid>
