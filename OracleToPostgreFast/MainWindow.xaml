@@ -32,6 +32,6 @@
         <TextBox  x:Name="tbJoinO_Copycheange" Text="复杂子表填在左边替换掉 再替换回来 " TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Left" Margin="1038,433,0,0" VerticalAlignment="Top" Height="139" Width="126"/>
         <CheckBox IsChecked="True" Name="cbAsStart" Content="从第一个as保留字开始处理" HorizontalAlignment="Left" Margin="43,212,0,0" VerticalAlignment="Top"/>
 
-
+        <TextBox Text="有工具改完也得测 只能处理简单的语法区别 总有很多奇怪的问题 这俩数据库语法和细节差异还是挺多的  具体可以参考 https://www.ashisuto.co.jp/tech-note/article/20141006_db.html" Margin="76,647,805,83" />
     </Grid>
 </Window>
