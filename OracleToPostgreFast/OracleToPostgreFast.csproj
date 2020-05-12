@@ -95,5 +95,14 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\OracleToPostgreFastLibrary.csproj">
+      <Project>{308f277c-2921-4d1b-89b0-a901b85aadf5}</Project>
+      <Name>OracleToPostgreFastLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
